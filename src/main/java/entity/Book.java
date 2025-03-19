@@ -4,20 +4,14 @@ package entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.Pattern;
+
 import java.time.LocalDate;
 import java.util.Objects;
 
-/*
-Här använder vi JPA för att mappa entiteten
-till databastabellen “books”. Validerings-annotationer
-säkerställer att vi har rätt format på fälten
-(t.ex. ISBN och att datumet ligger i det förflutna).
-Unik constraint säkerställer att kombinationen av
-title och author är unik.
-*/
-
 @Entity
-@Table(name = "books")
+@Table(name = "books", uniqueConstraints = {@UniqueConstraint(columnNames = {"title", "author"})
+        ,@UniqueConstraint(columnNames = {"isbn"})})
 public class Book {
 
     @Id
@@ -37,6 +31,8 @@ public class Book {
     private LocalDate publicationDate;
 
     @NotBlank(message = "ISBN is needed.")
+    @Pattern(regexp = "^\\d{10}|\\d{13}$", message = "Invalid ISBN format, must be 10 or 13 digits.")
+    @Column(unique = true)
     private String isbn;
 
 

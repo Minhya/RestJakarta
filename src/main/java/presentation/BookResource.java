@@ -5,7 +5,6 @@ import dto.BookResponse;
 import dto.CreateBook;
 import dto.ResponseDTO;
 import dto.UpdateBook;
-import entity.Book;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -20,12 +19,14 @@ import java.util.List;
 @Log
 public class BookResource {
     private BookService bookService;
+
     @Inject
     public BookResource(BookService bookService) {
         this.bookService = bookService;
     }
 
-    public BookResource(){}
+    public BookResource() {
+    }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -35,15 +36,22 @@ public class BookResource {
 
     @GET
     @Path("{id}")
-    @Produces
+    @Produces(MediaType.APPLICATION_JSON)
     public BookResponse getOneBook(@PathParam("id") Long id) {
-     return bookService.getBookById(id);
+        return bookService.getBookById(id);
+    }
+
+    @GET
+    @Path("search/title/{title}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<BookResponse> getOneBookByTitle(@PathParam("title") String title) {
+        return bookService.getBookByTitle(title);
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createNewBook(@Valid @NotNull CreateBook createBook){
-        if (createBook == null){
+    public Response createNewBook(@Valid @NotNull CreateBook createBook) {
+        if (createBook == null) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity("Book cannot be null")
                     .build();
@@ -59,7 +67,7 @@ public class BookResource {
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateBookFieldByField(@PathParam("id") Long id,
-                                           @Valid UpdateBook updateBook){
+                                           @Valid UpdateBook updateBook) {
         bookService.updateBook(updateBook, id);
         return Response.ok().build();
     }
@@ -67,25 +75,36 @@ public class BookResource {
     @PUT
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateBook(@PathParam("id") Long id, @Valid UpdateBook updateBook){
+    public Response updateBook(@PathParam("id") Long id, @Valid UpdateBook updateBook) {
         bookService.updateBook(updateBook, id);
         return Response.ok().build();
     }
 
-//    @GET
-//    @Path("title")
+    @GET
+    @Path("search/author/{author}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<BookResponse> getBooksByAuthor(@PathParam("author") String author) {
+        return bookService.getBooksByAuthor(author);
+    }
+
 
     @DELETE
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response deleteBook(@PathParam("id") Long id){
+    public Response deleteBook(@PathParam("id") Long id) {
         bookService.deleteBook(id);
         return Response.ok().build();
     }
-
-
-
-
-
-
 }
+
+
+
+
+
+
+
+
+
+
+
+

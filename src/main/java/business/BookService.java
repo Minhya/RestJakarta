@@ -14,25 +14,12 @@ import persistence.BookRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
-
-/*Vi skapar ett service-gränssnitt och en
-implementation som hanterar
-affärslogiken och använder repository samt mappern.
-
-Service-lagret hanterar all affärslogik, såsom validering,
-datakonvertering (via mapper) och anrop till repository.
-Metoderna är annoterade med @Transactional där det
-behövs för att säkerställa datakonsekvens.*/
-
 @ApplicationScoped
 public class BookService {
 
     private BookRepository bookRepository;
 
-    // Default no-args constructor for CDI proxying
     protected BookService() {
-        // This constructor is required by CDI for proxying.
     }
 
     @Inject
@@ -50,6 +37,20 @@ public class BookService {
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new NotFound("Book not found with id: " + id));
         return BookMapper.toBookResponse(book);
+    }
+
+    public List<BookResponse> getBookByTitle(String title) {
+        return bookRepository.findAll()
+                .filter(b -> b.getTitle().equalsIgnoreCase(title))
+                .map(BookMapper::toBookResponse)
+                .toList();
+    }
+
+    public List<BookResponse> getBooksByAuthor(String author) {
+        return bookRepository.findAll()
+                .filter(b -> b.getAuthor().equalsIgnoreCase(author))
+                .map(BookMapper::toBookResponse)
+                .toList();
     }
 
     @Transactional
@@ -83,105 +84,10 @@ public class BookService {
 
     @Transactional
     public void deleteBook(Long id) {
-        bookRepository.deleteById(id);
+        Book book = bookRepository.findById(id)
+                .orElseThrow(() -> new NotFound("Book not found with id: " + id));
+        bookRepository.delete(book);
     }
+
+
 }
-
-//private final BookRepository bookRepository;
-//
-//@Inject
-//public BookService(BookRepository bookRepository) {
-//    this.bookRepository = bookRepository;
-//}
-//
-//public BookService(){
-//    this.bookRepository = null;
-//}
-//
-//public List<BookResponse> getAllBooks() {
-//    LocalDate filterBookDateAfter = LocalDate.of(2000,1,1);
-//    return bookRepository.findByPublicationDateAfter(filterBookDateAfter)
-//            .stream()
-//            .map(BookResponse::new)
-//            .filter(Objects::nonNull)
-//            .toList();
-//}
-//public BookResponse getBookById(int id) {
-//    return bookRepository.findById(id)
-//            .map(BookResponse::new)
-//            .orElseThrow(() -> new NotFoundException("Book with id" + id + "not found"));
-//}
-//public Book createBook(CreateBook createBook) {
-//    Book newBook = map(createBook);
-//    newBook = bookRepository.insert(newBook);
-//    return newBook;
-//}
-//
-//public void updateBook(UpdateBook updateBook, Long id) {
-//    Book oldBook = bookRepository.findById(id)
-//            .orElseThrow(() -> new NotFoundException("Book with id" + id + "not found"));
-//
-//    if (oldBook.getTitle() != null) {
-//        oldBook.setTitle(updateBook.getTitle());
-//    }
-//    if (oldBook.getPublicationDate() != null) {
-//        oldBook.setPublicationDate(updateBook.getPublicationDate());
-//    }
-//    bookRepository.update(oldBook);
-//}
-
-
-//    List<BookResponse> getAllBooks();
-//
-//    BookResponse getBookById(Long id);
-//
-//    BookResponse createBook(CreateBook createBook);
-//
-//    BookResponse updateBook(UpdateBook updateBook);
-//
-//    void deleteBook(Long id);
-//
-//    List<BookResponse> filterBooks(String author, String title);
-
-
-
-
-
-
-
-//private BookRepository bookRepository;
-//
-//@Inject
-//public BookService(BookRepository bookRepository) {
-//    this.bookRepository = bookRepository;
-//}
-//
-//public BookService(){
-//
-//}
-//
-//public List<BookResponse> getAllBooks() {
-//    return bookRepository.findAll()
-//            .map(BookResponse::new)
-//            .filter(Objects::nonNull).toList();
-//}
-//
-//public BookResponse getBookById(Long id) {
-//    return bookRepository.findById(id)
-//            .map(BookResponse::new)
-//            .orElseThrow(()-> new NotFoundException("Book with" + id +"id not found"));
-//}
-//
-//public Book createBook(CreateBook createBook) {
-//    var newBook = map(createBook);
-//    newBook = bookRepository.insert(newBook);
-//    return newBook;
-//
-//}
-////change notfound later
-//public void updateBook(UpdateBook updateBook, Long id) {
-//    var oldBook = bookRepository.findById(id)
-//            .orElseThrow(()->
-//                    new NotFoundException("Book with" + id +"id not found"));
-//    if(updateBook.title() != null)
-//}

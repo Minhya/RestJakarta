@@ -2,15 +2,8 @@ package persistence;
 
 import entity.Book;
 import jakarta.data.repository.*;
-//import jakarta.data.repository.CrudRepository;
-import java.time.LocalDate;
-import java.util.Optional;
 
-/*Detta interface utökar flera repository-gränssnitt
-för att få stöd för grundläggande CRUD, paginering
-och sortering. Metoderna för filtrering
-implementeras automatiskt utifrån
-namngivningskonventioner.*/
+import java.util.Optional;
 
 @Repository
 public interface BookRepository extends CrudRepository<Book, Long> {
@@ -24,5 +17,5 @@ public interface BookRepository extends CrudRepository<Book, Long> {
     @Query("select b from Book b where b.author = :author")
     Optional<Book> findByAuthor(@Param("author") String author);
 
+
 }
-//    Optional<Book> findByPublicationDateAfter(LocalDate localDate);

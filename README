@@ -1,0 +1,26 @@
+This project is a modern RESTful API implemented with Jakarta EE 11 Preview. The project is structured layers with the following components:
+Entity class, DTO pattern, Mapper class, Jakarta Data Repository, Service Layer, REST Resource, Error handling and Containerization.
+
+This application is containerized with Docker and uses Docker Compose along with a PostgresSQL database, to run the application. Wildfly is used as the application server.
+This application manages a collection of books. It provides the user with the following:
+Create books, read details books, update books and delete books from the database.
+Allows the user to filter the list of books by title and author.
+
+To build and run the app:
+Java, Maven and Docker is needed.
+
+To compile and package the application as a WAR file in the target folder run this:
+mvn clean package
+
+Run the services in the docker-compose.yaml with the command:
+docker-compose up --build
+
+To make sure the containers are running use this command:
+docker ps
+
+Open browser and navigate to:
+http://localhost:8080/api/books
+
+
+
+

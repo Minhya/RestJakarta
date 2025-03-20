@@ -3,8 +3,8 @@ ARG jdk=23-jre
 ARG dist=ubi9-minimal
 
 FROM maven:3-eclipse-temurin-23 AS build
-WORKDIR /opt/jee2025
-COPY . /opt/jee2025
+WORKDIR /opt/RestfulJakarta
+COPY . /opt/RestfulJakarta
 RUN mvn package
 
 FROM eclipse-temurin:${jdk}-${dist}

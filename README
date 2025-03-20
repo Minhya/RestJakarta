@@ -9,9 +9,6 @@ Allows the user to filter the list of books by title and author.
 To build and run the app:
 Java, Maven and Docker is needed.
 
-To compile and package the application as a WAR file in the target folder run this:
-mvn clean package
-
 Run the services in the docker-compose.yaml with the command:
 docker-compose up --build
 
@@ -22,5 +19,6 @@ Open browser and navigate to:
 http://localhost:8080/api/books
 
 
-
+If needed to compile and package the application as a WAR file in the target folder run this:
+mvn clean package
 
